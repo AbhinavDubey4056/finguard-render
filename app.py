@@ -21,24 +21,14 @@ st.set_page_config(
 # --- FIREBASE SETUP ---
 # --- FIREBASE SETUP ---
 if not firebase_admin._apps:
-    try:
-        # Try loading from Streamlit Secrets (Best Practice for Cloud & Local)
-        if "firebase" in st.secrets:
-            # We must convert the specific secrets dict to a format Firebase understands
-            key_dict = dict(st.secrets["firebase"])
-            # Fix strict formatting for private_key
-            key_dict["private_key"] = key_dict["private_key"].replace("\\n", "\n")
-            
-            cred = credentials.Certificate(key_dict)
-            firebase_admin.initialize_app(cred)
-        
-        # Fallback for local JSON file (Only if you haven't set up secrets yet)
-        elif os.path.exists("serviceAccountKey.json"):
-            cred = credentials.Certificate("serviceAccountKey.json")
-            firebase_admin.initialize_app(cred)
-            
-    except Exception as e:
-        st.error(f"Failed to initialize Firebase: {e}")
+    # ⚠️ Ensure 'serviceAccountKey.json' is in your project directory
+    if os.path.exists("serviceAccountKey.json"):
+        cred = credentials.Certificate("serviceAccountKey.json")
+        firebase_admin.initialize_app(cred)
+    else:
+        # Fallback for generic path if needed
+        cred = credentials.Certificate("serviceAccountKey.json")
+        firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
@@ -998,9 +988,14 @@ def main_app():
     
     # Redirect when "Live" is selected
     if nav_mode == "Live":
-        st.markdown(
-            '<meta http-equiv="refresh" content="0; url=https://finguard-govind-frontend-hq7ykkgpybnidhi8nybhu5.streamlit.app/">',
-            unsafe_allow_html=True
+        # JavaScript is required to break out of the Streamlit Cloud iframe
+        components.html(
+            """
+            <script>
+                window.top.location.href = "https://finguard-govind-frontend-hq7ykkgpybnidhi8nybhu5.streamlit.app/";
+            </script>
+            """,
+            height=0
         )
 
     # ==========================
