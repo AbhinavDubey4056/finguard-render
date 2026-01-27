@@ -1288,6 +1288,12 @@ def main_app():
     #      DATABASE UI (FULL COPY FROM APP-4)
     # ==========================
     elif nav_mode == "Database":
+
+        if not st.session_state.users:
+            with st.spinner("Downloading secure data..."):
+                refresh_data()
+                st.rerun() # Refresh page to show new data
+                
         with st.sidebar:
             st.markdown("#### 🌓 System Theme")
             if st.button("Switch to " + ("Light Mode" if st.session_state.theme == "dark" else "Dark Mode"), use_container_width=True, key="db_theme_btn"):
