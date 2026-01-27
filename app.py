@@ -10,6 +10,9 @@ from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+print("--> 🚀 STARTING APP SCRIPT")
+
+
 BACKEND_URL = "https://AbhinavDubey4056-finguard-backend.hf.space"
 
 # --- PAGE CONFIGURATION ---
@@ -45,21 +48,21 @@ def init_db():
 
             cred = credentials.Certificate(cred_dict)
             firebase_admin.initialize_app(cred)
+            print("--> ✅ Firebase App Initialized")
         except Exception as e:
+            print(f"--> ❌ Firebase Init Error: {e}")
             st.error(f"Failed to connect to Firebase: {e}")
             return None
             
     return firestore.client()
 
 
-# Initialize once and store in 'db'
-db = None
+# Initialize Database
 try:
     db = init_db()
-    if db is None:
-        st.error("Firebase initialized but Firestore client is unreachable.")
 except Exception as e:
-    st.error(f"Firestore failed to connect: {e}")
+    print(f"--> ❌ DB Connection Fatal: {e}")
+    db = None
 
 # --- DATABASE HELPER FUNCTIONS ---
 def load_collection(collection_name):
