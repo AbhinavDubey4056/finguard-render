@@ -1,0 +1,6 @@
+streamlit
+requests
+firebase-admin
+# If you are using the webcam or JS features mentioned in your code
+streamlit-webrtc
+streamlit-js-eval
