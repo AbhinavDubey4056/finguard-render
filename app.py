@@ -1,4 +1,3 @@
-
 import streamlit as st
 import streamlit.components.v1 as components  # Required for JS injection
 import requests
@@ -10,9 +9,6 @@ from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-print("--> 🚀 STARTING APP SCRIPT")
-
-
 BACKEND_URL = "https://AbhinavDubey4056-finguard-backend.hf.space"
 
 # --- PAGE CONFIGURATION ---
@@ -23,46 +19,17 @@ st.set_page_config(
 )
 
 # --- FIREBASE SETUP ---
-import json
+if not firebase_admin._apps:
+    # ⚠️ Ensure 'serviceAccountKey.json' is in your project directory
+    if os.path.exists("serviceAccountKey.json"):
+        cred = credentials.Certificate("serviceAccountKey.json")
+        firebase_admin.initialize_app(cred)
+    else:
+        # Fallback for generic path if needed
+        cred = credentials.Certificate("serviceAccountKey.json")
+        firebase_admin.initialize_app(cred)
 
-# Use a function to keep it clean
-# --- FIREBASE SETUP (DIRECT HARDCODING) ---
-def init_db():
-    # Only initialize if it hasn't been done yet
-    if not firebase_admin._apps:
-        try:
-            # Paste your specific values from your serviceAccountKey.json file here
-            cred_dict = {
-                "type": "service_account",
-                "project_id": "fin-guard-ai",
-                "private_key_id": "d7c68a530b5520a1bb8554700f4928ffe113a448",
-                "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCZ4TT57zRYlTxJ\n+orSJCIYgxxBByNliDMfVG8y1tuPsw1Q++57YndAEIZRzxjs5AaKN/KWexR848gF\njAo0qRM0C/gS4BiDRj0liqLM2nHzEyJZ09KtlIqnbKIAycjzzUm8B+tILx4UBZii\nhqguvk09+6FNVCZarYwQm2cUfIkmhCvCZZJ8vvuUF41du3+HvF9Z7YGbcc8jGtYP\noNVo7i/GA2ie3565HA6CWIqCEOW864PFy7mnDdnXHjuIdlVSigCWDzKwG3sJFACW\n8+yaB512AbvaAWwQpcIUeqMbleredvAaFA1Y4n55xiki2PE02Js9lyatnxvraJ68\nrqzeL4kXAgMBAAECggEAC215JLKJ/aYfkxLjKlX6nj1mZMHl9A1YVpRLqcfhCFvw\nujnrbQhT+NMBVqP9ouIQRkV/Y4OCcv/rg9XxkBWaUnwtESHJUD5wHhCcpH/4hGfA\nXlFnzPJCFcrwgQR7QvfU6PzhkTvGjRAZVMCRTt9dFyRPx1Ffg85tn3IbBp91BAIh\nMdzoA/aKiv0sQF+SKChGGHBaYz7/83ZzMksH0aD5wk8Kzj6quiRpEUINjoUWmarf\n4EsnNxeCVEtRRKUulyWLB8eqcdabY9ZN/xRqKrSC1R9BKxmfSvvpu9wN5VvJh6BB\nbjWclUwkLDb9a7dJeRvevME4h0FIm6HrHAL3ChmbYQKBgQDYtZSyUm9p/qLp39c0\nIh0O75E2s208UiDdIS2pzIAIPmP0H+sqfsjHvglJOOf314lJG9B/fKonItxjEgZk\nodKbkE0ACjeBgCy3b5qCnc8NGLqxkKxZxlW17Bho1HsxqRm7UHO4ig0tNN49L1vm\nvu2UXleZlvB600bgD+fakQqxxwKBgQC1x26t8KIEfCueTu4aSJ4XTtPcDGVl7MfC\nFYTj77Sd6lyl7Ivw5dgGj4vb5ak2Vn/d0VLvkS7C3Mbxw8lzl56ccesbsDJ+RYo/\nI8A7ezZTlD0wWX3DM68pXLsiD3ieaewCh+2BT8Sr4PWC7RYzGVNWyjX2k9NMTxH6\niVInZ0BuMQKBgFJACOHtm8/VD6xIgvuMfw7uKmVikHE2krabIyOxNF7sny9G9hC4\n8ietnwSljpVovvh6kBXzEPmtp4wKiVakfLUCfdcoCY0jQtWUjEZK8wz7d9BxIpko\nR9u2ckVHcEKW9ec8T8+YxguEZ109nlnj2XRYolLvEPLtQZdFMjCooDB9AoGBAKFs\n/H3c/pQLDNUl9M5EhJfgOcXlADrWXcKeR4f/e57s29/BQ7jm88NHwITD21PU1vJO\nDF+QxzzmwIk8O+65y3HUvFu3Se/Wo2FUx0ZLMcBhGUGRh1xMzpVlsw0ZPh03pQ3O\nVf0KsHWObZgaISe5qsedBPT266KNaULapak2SQJRAoGAObtU8Obtvdpy1jXGLV7+\nCkra0KYynVdT0qfnqq5ZUPwVGFrrQoLGz6CQaH/orGu+pNDaaCdYDfHbUGE7JtqC\nzOp6Ws1mv7JVFSHczCiOvaRNdoFUMxeakbWxxq6r6NX/wRo9TC8fnTe4ulu9ZUPI\niBc5tzBK6W890rWqT8sgPmk=\n-----END PRIVATE KEY-----\n",
-                "client_email": "firebase-adminsdk-fbsvc@fin-guard-ai.iam.gserviceaccount.com",
-                "client_id": "101334652157656727117",
-                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                "token_uri": "https://oauth2.googleapis.com/token",
-                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-                "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40fin-guard-ai.iam.gserviceaccount.com",
-                "universe_domain": "googleapis.com"
-            }
-
-            cred = credentials.Certificate(cred_dict)
-            firebase_admin.initialize_app(cred)
-            print("--> ✅ Firebase App Initialized")
-        except Exception as e:
-            print(f"--> ❌ Firebase Init Error: {e}")
-            st.error(f"Failed to connect to Firebase: {e}")
-            return None
-            
-    return firestore.client()
-
-
-# Initialize Database
-try:
-    db = init_db()
-except Exception as e:
-    print(f"--> ❌ DB Connection Fatal: {e}")
-    db = None
+db = firestore.client()
 
 # --- DATABASE HELPER FUNCTIONS ---
 def load_collection(collection_name):
@@ -97,29 +64,15 @@ if "theme" not in st.session_state:
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-# --- INITIALIZE SESSION STATE ---
-if "theme" not in st.session_state:
-    st.session_state.theme = "dark"
-
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-# Initialize empty lists first so the app loads INSTANTLY
-# ✅ FIX: Check each key individually to handle "partial" crashes
 if "users" not in st.session_state:
-    st.session_state.users = []
-
-if "employees" not in st.session_state:
-    st.session_state.employees = []
-
-if "meetings" not in st.session_state:
-    st.session_state.meetings = []
-
-if "secrets" not in st.session_state:
-    st.session_state.secrets = []
-
-if "reports" not in st.session_state:
-    st.session_state.reports = []
+    try:
+        refresh_data()
+    except Exception as e:
+        st.session_state.users = []
+        st.session_state.employees = []
+        st.session_state.meetings = []
+        st.session_state.secrets = []
+        st.session_state.reports = []
 
 # Live Mode States
 if "session_code" not in st.session_state:
@@ -1071,6 +1024,7 @@ def main_app():
                 with col2:
                     if st.button("🚀 Analyze Video"):
                         process_analysis(uploaded_video, f"{BACKEND_URL}/analyze/video", "Video")
+
         with tab_audio:
             uploaded_audio = st.file_uploader("Upload audio for analysis", type=["wav", "mp3", "flac"], key="audio_uploader")
             if uploaded_audio:
@@ -1288,12 +1242,6 @@ def main_app():
     #      DATABASE UI (FULL COPY FROM APP-4)
     # ==========================
     elif nav_mode == "Database":
-
-        if not st.session_state.users:
-            with st.spinner("Downloading secure data..."):
-                refresh_data()
-                st.rerun() # Refresh page to show new data
-                
         with st.sidebar:
             st.markdown("#### 🌓 System Theme")
             if st.button("Switch to " + ("Light Mode" if st.session_state.theme == "dark" else "Dark Mode"), use_container_width=True, key="db_theme_btn"):
