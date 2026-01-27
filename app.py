@@ -893,7 +893,7 @@ def login_page():
                 <p class="sidebar-text">
                     1. Authenticate your username.<br>
                     2. Input the password.<br>
-                    3. Complete the 5-phrase sequence verification.<br>
+                    3. Complete the 5-phrase sequence verification i.e. finguard, ai, is, the, best.<br>
                     4. System access is logged and monitored.
                 </p>
                 <h3>About</h3>
@@ -995,6 +995,13 @@ def main_app():
         st.markdown('<h1 style="margin-top:0;">FINGUARD AGENT Dashboard</h1>', unsafe_allow_html=True)
     with col_nav:
         nav_mode = st.selectbox("Navigation", ["Upload", "Live", "Database"], label_visibility="collapsed")
+    
+    # Redirect when "Live" is selected
+    if nav_mode == "Live":
+        st.markdown(
+            '<meta http-equiv="refresh" content="0; url=https://finguard-govind-frontend-hq7ykkgpybnidhi8nybhu5.streamlit.app/">',
+            unsafe_allow_html=True
+        )
 
     # ==========================
     #      UPLOAD UI
