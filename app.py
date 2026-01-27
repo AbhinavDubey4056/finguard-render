@@ -988,15 +988,35 @@ def main_app():
     
     # Redirect when "Live" is selected
     if nav_mode == "Live":
-        # JavaScript is required to break out of the Streamlit Cloud iframe
-        components.html(
+        st.warning("⚠️ You are entering the Live Verification Terminal.")
+        st.markdown("Click the button below to launch the secure session in a new window.")
+        
+        # Robust HTML Button that always works
+        st.markdown(
             """
-            <script>
-                window.top.location.href = "https://finguard-govind-frontend-hq7ykkgpybnidhi8nybhu5.streamlit.app/";
-            </script>
-            """,
-            height=0
+            <a href="https://finguard-govind-frontend-hq7ykkgpybnidhi8nybhu5.streamlit.app/" target="_blank" style="text-decoration:none;">
+                <button style="
+                    background-color:#FF4B4B; 
+                    color:white; 
+                    border:none; 
+                    padding:15px 32px; 
+                    text-align:center; 
+                    text-decoration:none; 
+                    display:inline-block; 
+                    font-size:16px; 
+                    border-radius:8px; 
+                    cursor:pointer;
+                    width:100%;
+                    font-weight:bold;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    transition: all 0.3s ease;">
+                    🚀 LAUNCH LIVE TERMINAL
+                </button>
+            </a>
+            """, 
+            unsafe_allow_html=True
         )
+        st.stop()
 
     # ==========================
     #      UPLOAD UI
