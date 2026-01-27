@@ -8,6 +8,7 @@ import string
 from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000").rstrip("/")
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -1021,8 +1022,7 @@ def main_app():
                     st.video(uploaded_video)
                 with col2:
                     if st.button("🚀 Analyze Video"):
-                        process_analysis(uploaded_video, "http://localhost:8000/analyze/video", "Video")
-
+                        process_analysis(uploaded_video, f"{BACKEND_URL}/analyze/video", "Video")
         with tab_audio:
             uploaded_audio = st.file_uploader("Upload audio for analysis", type=["wav", "mp3", "flac"], key="audio_uploader")
             if uploaded_audio:
@@ -1031,7 +1031,7 @@ def main_app():
                     st.audio(uploaded_audio)
                 with col2:
                     if st.button("🚀 Analyze Audio"):
-                        process_analysis(uploaded_audio, "http://localhost:8000/analyze/audio", "Audio")
+                        process_analysis(uploaded_audio, f"{BACKEND_URL}/analyze/audio", "Audio")
 
     # ==========================
     #      LIVE MODE UI (Original logic from app.py, new styling)
