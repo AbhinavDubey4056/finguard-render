@@ -105,11 +105,20 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 # Initialize empty lists first so the app loads INSTANTLY
+# ✅ FIX: Check each key individually to handle "partial" crashes
 if "users" not in st.session_state:
     st.session_state.users = []
+
+if "employees" not in st.session_state:
     st.session_state.employees = []
+
+if "meetings" not in st.session_state:
     st.session_state.meetings = []
+
+if "secrets" not in st.session_state:
     st.session_state.secrets = []
+
+if "reports" not in st.session_state:
     st.session_state.reports = []
 
 # Live Mode States
