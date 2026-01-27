@@ -1,3 +1,4 @@
+
 import streamlit as st
 import streamlit.components.v1 as components  # Required for JS injection
 import requests
@@ -18,17 +19,35 @@ st.set_page_config(
 )
 
 # --- FIREBASE SETUP ---
-if not firebase_admin._apps:
-    # ⚠️ Ensure 'serviceAccountKey.json' is in your project directory
-    if os.path.exists("serviceAccountKey.json"):
-        cred = credentials.Certificate("serviceAccountKey.json")
-        firebase_admin.initialize_app(cred)
-    else:
-        # Fallback for generic path if needed
-        cred = credentials.Certificate("serviceAccountKey.json")
-        firebase_admin.initialize_app(cred)
+import json
 
-db = firestore.client()
+# Use a function to keep it clean
+def init_db():
+    if not firebase_admin._apps:
+        try:
+            # Streamlit Cloud parses the [firebase] section in Secrets as a dict
+            if "firebase" in st.secrets:
+                cred_dict = dict(st.secrets["firebase"])
+                # Fix newlines in the private key
+                cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
+                cred = credentials.Certificate(cred_dict)
+                firebase_admin.initialize_app(cred)
+            else:
+                st.error("Firebase secrets not found in Streamlit Cloud settings.")
+                return None
+        except Exception as e:
+            st.error(f"Failed to parse Firebase Secret: {e}")
+            return None
+    return firestore.client()
+
+# Initialize once and store in 'db'
+db = None
+try:
+    db = init_db()
+    if db is None:
+        st.error("Firebase initialized but Firestore client is unreachable.")
+except Exception as e:
+    st.error(f"Firestore failed to connect: {e}")
 
 # --- DATABASE HELPER FUNCTIONS ---
 def load_collection(collection_name):
