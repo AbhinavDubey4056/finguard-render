@@ -881,7 +881,7 @@ def login_page():
             <div class="sidebar-box">
                 <h3>Instructions</h3>
                 <p class="sidebar-text">
-                    1. Authenticate your username.<br>
+                    1. Authenticate your username ie username(admin) and pass(1234).<br>
                     2. Input the password.<br>
                     3. Complete the 5-phrase sequence verification i.e. finguard, ai, is, the, best.<br>
                     4. System access is logged and monitored.
