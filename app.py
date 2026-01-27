@@ -97,15 +97,20 @@ if "theme" not in st.session_state:
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
+# --- INITIALIZE SESSION STATE ---
+if "theme" not in st.session_state:
+    st.session_state.theme = "dark"
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+# Initialize empty lists first so the app loads INSTANTLY
 if "users" not in st.session_state:
-    try:
-        refresh_data()
-    except Exception as e:
-        st.session_state.users = []
-        st.session_state.employees = []
-        st.session_state.meetings = []
-        st.session_state.secrets = []
-        st.session_state.reports = []
+    st.session_state.users = []
+    st.session_state.employees = []
+    st.session_state.meetings = []
+    st.session_state.secrets = []
+    st.session_state.reports = []
 
 # Live Mode States
 if "session_code" not in st.session_state:
