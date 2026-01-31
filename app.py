@@ -9,7 +9,7 @@ from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-BACKEND_URL = "https://AbhinavDubey4056-finguard-backend.hf.space"
+BACKEND_URL = "https://finguard-upload-941343474668.asia-south2.run.app"
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -1487,4 +1487,5 @@ if __name__ == "__main__":
     if st.session_state.logged_in:
         main_app()
     else:
+
         login_page()
