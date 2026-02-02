@@ -9,7 +9,7 @@ from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-BACKEND_URL = "https://finguard-upload-941343474668.asia-south2.run.app"
+BACKEND_URL = "https://abhinavdubey4056-cloud-upload.hf.space"
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
